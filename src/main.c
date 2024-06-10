@@ -5,16 +5,23 @@ int main() {
   BytecodeSequence bytecode_sequence;
   initBytecodeSequence(&bytecode_sequence);
 
-  int constant = addConstant(&bytecode_sequence, 1.2);
-  int constant2 = addConstant(&bytecode_sequence, 1000);
-
+  int a = addConstant(&bytecode_sequence, 5.0);
   writeBytecodeSequence(&bytecode_sequence, OP_CONSTANT, 1);
-  writeBytecodeSequence(&bytecode_sequence, constant, 1);
+  writeBytecodeSequence(&bytecode_sequence, a, 1);
 
+  int b = addConstant(&bytecode_sequence, 3.0);
   writeBytecodeSequence(&bytecode_sequence, OP_CONSTANT, 2);
-  writeBytecodeSequence(&bytecode_sequence, constant2, 2);
+  writeBytecodeSequence(&bytecode_sequence, b, 2);
 
-  writeBytecodeSequence(&bytecode_sequence, OP_RETURN, 3);
+  writeBytecodeSequence(&bytecode_sequence, OP_NEGATE, 3);
+  writeBytecodeSequence(&bytecode_sequence, OP_ADD, 3);
+
+  int c = addConstant(&bytecode_sequence, 2.0);
+  writeBytecodeSequence(&bytecode_sequence, OP_CONSTANT, 4);
+  writeBytecodeSequence(&bytecode_sequence, c, 4);
+  writeBytecodeSequence(&bytecode_sequence, OP_MULTIPLY, 4);
+
+  writeBytecodeSequence(&bytecode_sequence, OP_RETURN, 4);
 
   VM vm;
   init_vm(&vm);

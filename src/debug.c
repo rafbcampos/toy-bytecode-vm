@@ -31,6 +31,16 @@ int disassembleInstruction(BytecodeSequence *bytecode_sequence, int offset) {
   switch (instruction) {
   case OP_RETURN:
     return simpleInstruction("OP_RETURN", offset);
+  case OP_ADD:
+    return simpleInstruction("OP_ADD", offset);
+  case OP_SUBTRACT:
+    return simpleInstruction("OP_SUBTRACT", offset);
+  case OP_MULTIPLY:
+    return simpleInstruction("OP_MULTIPLY", offset);
+  case OP_DIVIDE:
+    return simpleInstruction("OP_DIVIDE", offset);
+  case OP_NEGATE:
+    return simpleInstruction("OP_NEGATE", offset);
   case OP_CONSTANT:
     return constantInstruction("OP_CONSTANT", bytecode_sequence, offset + 1);
   default:
