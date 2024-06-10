@@ -5,12 +5,17 @@
 #include <stdint.h>
 
 typedef double Value;
+typedef struct {
+  int line;
+  int count;
+} LineNumber;
 typedef DYNAMIC_ARRAY(uint8_t) OpCodeArray;
-typedef DYNAMIC_ARRAY(int) LineArray;
+typedef DYNAMIC_ARRAY(LineNumber) LineArray;
 typedef DYNAMIC_ARRAY(Value) ValueArray;
 
 typedef enum {
   OP_CONSTANT,
+  OP_CONSTANT_LONG,
   OP_RETURN,
 } OpCode;
 
@@ -23,7 +28,10 @@ typedef struct {
 void initBytecodeSequence(BytecodeSequence *sequence);
 void freeBytecodeSequence(BytecodeSequence *sequence);
 void writeBytecodeSequence(BytecodeSequence *sequence, uint8_t byte, int line);
+void writeBytecodeSequenceLong(BytecodeSequence *sequence, uint32_t constant,
+                               int line);
 int addConstant(BytecodeSequence *sequence, Value value);
 void printValue(Value value);
+int getLine(BytecodeSequence *sequence, int instructionIndex);
 
 #endif

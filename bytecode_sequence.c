@@ -16,7 +16,21 @@ void freeBytecodeSequence(BytecodeSequence *sequence) {
 
 void writeBytecodeSequence(BytecodeSequence *sequence, uint8_t byte, int line) {
   DYNAMIC_ARRAY_PUSH(sequence->code, byte);
-  DYNAMIC_ARRAY_PUSH(sequence->lines, line);
+  if (sequence->lines.size == 0 ||
+      sequence->lines.data[sequence->lines.size - 1].line != line) {
+    LineNumber lineNumber = {line, 1};
+    DYNAMIC_ARRAY_PUSH(sequence->lines, lineNumber);
+  } else {
+    sequence->lines.data[sequence->lines.size - 1].count++;
+  }
+}
+
+void writeBytecodeSequenceLong(BytecodeSequence *sequence, uint32_t constant,
+                               int line) {
+  writeBytecodeSequence(sequence, OP_CONSTANT_LONG, line);
+  writeBytecodeSequence(sequence, (constant >> 16) & 0xFF, line);
+  writeBytecodeSequence(sequence, (constant >> 8) & 0xFF, line);
+  writeBytecodeSequence(sequence, constant & 0xFF, line);
 }
 
 int addConstant(BytecodeSequence *sequence, Value value) {
@@ -25,3 +39,14 @@ int addConstant(BytecodeSequence *sequence, Value value) {
 }
 
 void printValue(Value value) { printf("%g", value); }
+
+int getLine(BytecodeSequence *sequence, int instructionIndex) {
+  int instructionCount = 0;
+  for (int i = 0; i < sequence->lines.size; i++) {
+    instructionCount += sequence->lines.data[i].count;
+    if (instructionCount > instructionIndex) {
+      return sequence->lines.data[i].line;
+    }
+  }
+  return -1;
+}
