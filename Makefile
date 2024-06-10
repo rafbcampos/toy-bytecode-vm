@@ -9,21 +9,20 @@ $(TARGET): | build $(OBJS)
 build:
 	mkdir -p build
 
-build/main.o: main.c
-	$(CC) $(CFLAGS) -c main.c -o build/main.o
+build/main.o: src/main.c
+	$(CC) $(CFLAGS) -c src/main.c -o build/main.o
 
-build/bytecode_sequence.o: bytecode_sequence.c
-	$(CC) $(CFLAGS) -c bytecode_sequence.c -o build/bytecode_sequence.o
+build/bytecode_sequence.o: src/bytecode_sequence.c
+	$(CC) $(CFLAGS) -c src/bytecode_sequence.c -o build/bytecode_sequence.o
 
-build/dynamic_array.o: dynamic_array.c
-	$(CC) $(CFLAGS) -c dynamic_array.c -o build/dynamic_array.o
+build/dynamic_array.o: src/dynamic_array.c
+	$(CC) $(CFLAGS) -c src/dynamic_array.c -o build/dynamic_array.o
 
-build/debug.o: debug.c
-	$(CC) $(CFLAGS) -c debug.c -o build/debug.o
+build/debug.o: src/debug.c
+	$(CC) $(CFLAGS) -c src/debug.c -o build/debug.o
 
 run: $(TARGET)
 	./$(TARGET)
 
 clean:
 	rm -f build/*.o $(TARGET)
-
