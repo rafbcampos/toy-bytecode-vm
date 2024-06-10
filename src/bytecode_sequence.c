@@ -25,14 +25,6 @@ void writeBytecodeSequence(BytecodeSequence *sequence, uint8_t byte, int line) {
   }
 }
 
-void writeBytecodeSequenceLong(BytecodeSequence *sequence, uint32_t constant,
-                               int line) {
-  writeBytecodeSequence(sequence, OP_CONSTANT_LONG, line);
-  writeBytecodeSequence(sequence, (constant >> 16) & 0xFF, line);
-  writeBytecodeSequence(sequence, (constant >> 8) & 0xFF, line);
-  writeBytecodeSequence(sequence, constant & 0xFF, line);
-}
-
 int addConstant(BytecodeSequence *sequence, Value value) {
   DYNAMIC_ARRAY_PUSH(sequence->constants, value);
   return sequence->constants.size - 1;
