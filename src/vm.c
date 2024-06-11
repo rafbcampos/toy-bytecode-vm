@@ -51,6 +51,10 @@ static void runtime_error(VM *vm, const char *format, ...) {
   reset_stack(vm);
 }
 
+static bool is_falsey(Value value) {
+  return IS_NIL(value) || (IS_BOOL(value) && !AS_BOOL(value));
+}
+
 InterpretResult run(VM *vm) {
 #define READ_BYTE() (*vm->ip++)
 #define READ_CONSTANT() (vm->bytecode->constants.data[READ_BYTE()])
@@ -114,6 +118,33 @@ InterpretResult run(VM *vm) {
       break;
     case OP_DIVIDE:
       BINARY_OP(vm, NUMBER_VAL, /);
+      break;
+    case OP_EQUAL: {
+      Value b = pop(vm);
+      Value a = pop(vm);
+      push(vm, BOOL_VAL(values_equal(a, b)));
+      break;
+    }
+    case OP_NOT_EQUAL: {
+      Value b = pop(vm);
+      Value a = pop(vm);
+      push(vm, BOOL_VAL(!values_equal(a, b)));
+      break;
+    }
+    case OP_GREATER:
+      BINARY_OP(vm, BOOL_VAL, >);
+      break;
+    case OP_LESS:
+      BINARY_OP(vm, BOOL_VAL, <);
+      break;
+    case OP_GREATER_EQUAL:
+      BINARY_OP(vm, BOOL_VAL, >=);
+      break;
+    case OP_LESS_EQUAL:
+      BINARY_OP(vm, BOOL_VAL, <=);
+      break;
+    case OP_NOT:
+      push(vm, BOOL_VAL(is_falsey(pop(vm))));
       break;
     case OP_NEGATE: {
       if (!IS_NUMBER(peek(vm, 0))) {

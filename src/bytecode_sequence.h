@@ -44,10 +44,17 @@ typedef enum {
   OP_NIL,
   OP_TRUE,
   OP_FALSE,
+  OP_EQUAL,
+  OP_NOT_EQUAL,
+  OP_GREATER,
+  OP_GREATER_EQUAL,
+  OP_LESS,
+  OP_LESS_EQUAL,
   OP_ADD,
   OP_SUBTRACT,
   OP_MULTIPLY,
   OP_DIVIDE,
+  OP_NOT,
   OP_NEGATE,
   OP_RETURN,
 } OpCode;
@@ -65,5 +72,6 @@ void write_bytecode_sequence(BytecodeSequence *sequence, uint8_t byte,
 int add_constant(BytecodeSequence *sequence, Value value);
 void print_value(Value value);
 int get_line(BytecodeSequence *sequence, int instructionIndex);
+bool values_equal(Value a, Value b);
 
 #endif
