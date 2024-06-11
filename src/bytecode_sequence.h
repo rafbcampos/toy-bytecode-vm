@@ -29,11 +29,12 @@ typedef struct {
   ValueArray constants;
 } BytecodeSequence;
 
-void initBytecodeSequence(BytecodeSequence *sequence);
-void freeBytecodeSequence(BytecodeSequence *sequence);
-void writeBytecodeSequence(BytecodeSequence *sequence, uint8_t byte, int line);
-int addConstant(BytecodeSequence *sequence, Value value);
-void printValue(Value value);
-int getLine(BytecodeSequence *sequence, int instructionIndex);
+void init_bytecode_sequence(BytecodeSequence *sequence);
+void free_bytecode_sequence(BytecodeSequence *sequence);
+void write_bytecode_sequence(BytecodeSequence *sequence, uint8_t byte,
+                             int line);
+int add_constant(BytecodeSequence *sequence, Value value);
+void print_value(Value value);
+int get_line(BytecodeSequence *sequence, int instructionIndex);
 
 #endif

@@ -3,8 +3,8 @@
 
 #include "bytecode_sequence.h"
 
-void disassembleBytecodeSequence(BytecodeSequence *bytecode_sequence,
-                                 const char *name);
-int disassembleInstruction(BytecodeSequence *bytecode_sequence, int offset);
+void disassemble_bytecode_sequence(BytecodeSequence *bytecode_sequence,
+                                   const char *name);
+int disassemble_instruction(BytecodeSequence *bytecode_sequence, int offset);
 
 #endif

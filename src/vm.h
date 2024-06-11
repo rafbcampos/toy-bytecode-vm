@@ -24,6 +24,7 @@ void init_vm(VM *vm);
 void free_vm(VM *vm);
 void push(VM *vm, Value value);
 Value pop(VM *vm);
-InterpretResult interpret(VM *vm, BytecodeSequence *bytecode);
+InterpretResult interpret(VM *vm, BytecodeSequence *bytecode_sequence,
+                          const char *source);
 
 #endif

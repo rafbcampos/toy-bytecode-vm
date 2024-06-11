@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -g -Wall
-OBJS = build/main.o build/bytecode_sequence.o build/dynamic_array.o build/debug.o build/vm.o
+OBJS = build/main.o build/bytecode_sequence.o build/dynamic_array.o build/debug.o build/vm.o build/compiler.o build/scanner.o
 TARGET = build/main
 
 $(TARGET): | build $(OBJS)
@@ -18,8 +18,14 @@ build/bytecode_sequence.o: src/bytecode_sequence.c
 build/vm.o: src/vm.c
 	$(CC) $(CFLAGS) -c src/vm.c -o build/vm.o
 
+build/scanner.o: src/scanner.c
+	$(CC) $(CFLAGS) -c src/scanner.c -o build/scanner.o
+
 build/dynamic_array.o: src/dynamic_array.c
 	$(CC) $(CFLAGS) -c src/dynamic_array.c -o build/dynamic_array.o
+
+build/compiler.o: src/compiler.c
+	$(CC) $(CFLAGS) -c src/compiler.c -o build/compiler.o
 
 build/debug.o: src/debug.c
 	$(CC) $(CFLAGS) -c src/debug.c -o build/debug.o

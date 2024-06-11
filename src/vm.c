@@ -1,10 +1,11 @@
 #include "vm.h"
 #include "bytecode_sequence.h"
+#include "compiler.h"
 #include "debug.h"
 #include <stdbool.h>
 #include <stdio.h>
 
-void resetStack(VM *vm) { vm->stack_top = vm->stack; }
+void reset_stack(VM *vm) { vm->stack_top = vm->stack; }
 
 void init_vm(VM *vm) {
   if (vm == NULL) {
@@ -13,7 +14,7 @@ void init_vm(VM *vm) {
   }
   vm->ip = NULL;
   vm->bytecode = NULL;
-  resetStack(vm);
+  reset_stack(vm);
 }
 
 void free_vm(VM *vm) {
@@ -59,12 +60,12 @@ InterpretResult run(VM *vm) {
     printf("          ");
     for (Value *slot = vm->stack; slot < vm->stack_top; slot++) {
       printf("[ ");
-      printValue(*slot);
+      print_value(*slot);
       printf(" ]");
     }
     printf("\n");
-    disassembleInstruction(vm->bytecode,
-                           (int)(vm->ip - vm->bytecode->code.data));
+    disassemble_instruction(vm->bytecode,
+                            (int)(vm->ip - vm->bytecode->code.data));
 #endif
     uint8_t instruction = READ_BYTE();
     switch (instruction) {
@@ -90,7 +91,7 @@ InterpretResult run(VM *vm) {
       break;
     }
     case OP_RETURN: {
-      printValue(pop(vm));
+      print_value(pop(vm));
       printf("\n");
       return INTERPRET_OK;
     }
@@ -106,16 +107,19 @@ InterpretResult run(VM *vm) {
 #undef BINARY_OP
 }
 
-InterpretResult interpret(VM *vm, BytecodeSequence *bytecode_sequence) {
+InterpretResult interpret(VM *vm, BytecodeSequence *bytecode_sequence,
+                          const char *source) {
   if (vm == NULL) {
     printf("vm is NULL\n");
     return INTERPRET_COMPILE_ERROR;
   }
 
-  if (bytecode_sequence == NULL || bytecode_sequence->code.data == NULL) {
-    printf("bytecode_sequence or bytecode_sequence->code.data is NULL\n");
+  if (bytecode_sequence == NULL) {
+    printf("bytecode_sequence is NULL\n");
     return INTERPRET_COMPILE_ERROR;
   }
+
+  compile(bytecode_sequence, source);
 
   vm->bytecode = bytecode_sequence;
   vm->ip = bytecode_sequence->code.data;
