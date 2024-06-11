@@ -93,7 +93,7 @@ static void emit_constant(Value value) {
 
 static void number() {
   double value = strtod(parser.previous.start, NULL);
-  emit_constant(value);
+  emit_constant(NUMBER_VAL(value));
 }
 
 static ParseRule *get_rule(TokenType type) { return &rules[type]; }

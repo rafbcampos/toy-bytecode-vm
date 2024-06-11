@@ -36,7 +36,17 @@ int add_constant(BytecodeSequence *sequence, Value value) {
   return sequence->constants.size - 1;
 }
 
-void print_value(Value value) { printf("%g", value); }
+void print_value(Value value) {
+  if (IS_NUMBER(value)) {
+    printf("%g", AS_NUMBER(value));
+  } else if (IS_BOOL(value)) {
+    printf("%s", AS_BOOL(value) ? "true" : "false");
+  } else if (IS_NIL(value)) {
+    printf("nil");
+  } else {
+    printf("Unknown value type");
+  }
+}
 
 int get_line(BytecodeSequence *sequence, int instructionIndex) {
   int instructionCount = 0;
