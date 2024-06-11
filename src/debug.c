@@ -43,6 +43,12 @@ int disassemble_instruction(BytecodeSequence *bytecode_sequence, int offset) {
     return simple_instruction("OP_NEGATE", offset);
   case OP_CONSTANT:
     return constant_instruction("OP_CONSTANT", bytecode_sequence, offset + 1);
+  case OP_NIL:
+    return simple_instruction("OP_NIL", offset);
+  case OP_TRUE:
+    return simple_instruction("OP_TRUE", offset);
+  case OP_FALSE:
+    return simple_instruction("OP_FALSE", offset);
   default:
     printf("Unknown opcode %d\n", instruction);
     return offset + 1;

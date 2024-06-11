@@ -65,13 +65,13 @@ InterpretResult run(VM *vm) {
     push(vm, value_type(a op b));                                              \
   } while (false)
 
-  if (vm == NULL || vm->ip == NULL || vm->bytecode == NULL) {
-    printf("vm, vm->ip, or vm->bytecode is NULL\n");
+  if (vm == NULL) {
+    printf("vm is NULL\n");
     return INTERPRET_COMPILE_ERROR;
   }
 
-  if (vm->bytecode->constants.data == NULL) {
-    printf("vm->bytecode->constants.data is NULL\n");
+  if (vm->ip == NULL || vm->bytecode == NULL) {
+    printf("vm is not initialized\n");
     return INTERPRET_COMPILE_ERROR;
   }
 
@@ -94,6 +94,15 @@ InterpretResult run(VM *vm) {
       push(vm, constant);
       break;
     }
+    case OP_NIL:
+      push(vm, NIL_VAL);
+      break;
+    case OP_TRUE:
+      push(vm, BOOL_VAL(true));
+      break;
+    case OP_FALSE:
+      push(vm, BOOL_VAL(false));
+      break;
     case OP_ADD:
       BINARY_OP(vm, NUMBER_VAL, +);
       break;

@@ -95,7 +95,7 @@ Token string() {
 static int is_digit(char c) { return c >= '0' && c <= '9'; }
 
 static int is_alpha(char c) {
-  return (c >= 'a' && c < -'z') || (c >= 'A' && c <= 'Z') || c == '_';
+  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
 }
 
 static TokenType check_keyword(int start, int length, const char *rest,
