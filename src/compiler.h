@@ -3,6 +3,7 @@
 
 #include "bytecode_sequence.h"
 #include "scanner.h"
+#include "vm.h"
 #include <stdbool.h>
 
 #define DEBUG_PRINT_CODE
@@ -36,6 +37,6 @@ typedef struct {
   Precedence precedence;
 } ParseRule;
 
-bool compile(BytecodeSequence *bytecode_sequence, const char *source);
+bool compile(VM *vm, BytecodeSequence *bytecode_sequence, const char *source);
 
 #endif // !compiler_h

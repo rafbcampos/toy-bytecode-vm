@@ -2,9 +2,11 @@
 #include "bytecode_sequence.h"
 #include "compiler.h"
 #include "debug.h"
+#include "object.h"
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 void reset_stack(VM *vm) { vm->stack_top = vm->stack; }
 
@@ -15,6 +17,7 @@ void init_vm(VM *vm) {
   }
   vm->ip = NULL;
   vm->bytecode = NULL;
+  vm->objects = NULL;
   reset_stack(vm);
 }
 
@@ -23,7 +26,7 @@ void free_vm(VM *vm) {
     fprintf(stderr, "Trying to free the VM, but got NULL\n");
     exit(EXIT_FAILURE);
   }
-  init_vm(vm);
+  free_objects(vm);
 }
 
 void push(VM *vm, Value value) {
@@ -52,6 +55,23 @@ static void runtime_error(VM *vm, const char *format, ...) {
 
 static bool is_falsey(Value value) {
   return IS_NIL(value) || (IS_BOOL(value) && !AS_BOOL(value));
+}
+
+static void concatenate(VM *vm) {
+  ObjString *b = AS_STRING(pop(vm));
+  ObjString *a = AS_STRING(pop(vm));
+
+  int length = a->length + b->length;
+  char *chars = realloc(NULL, length + 1);
+  if (chars == NULL) {
+    printf("Memory allocation failed\n");
+    exit(1);
+  }
+  memcpy(chars, a->chars, a->length);
+  memcpy(chars + a->length, b->chars, b->length);
+  chars[length] = '\0';
+  ObjString *result = take_string(vm, chars, length);
+  push(vm, OBJ_VAL(result));
 }
 
 InterpretResult run(VM *vm) {
@@ -106,9 +126,19 @@ InterpretResult run(VM *vm) {
     case OP_FALSE:
       push(vm, BOOL_VAL(false));
       break;
-    case OP_ADD:
-      BINARY_OP(vm, NUMBER_VAL, +);
+    case OP_ADD: {
+      if (IS_STRING(peek(vm, 0)) && IS_STRING(peek(vm, 1))) {
+        concatenate(vm);
+      } else if (IS_NUMBER(peek(vm, 0)) && IS_NUMBER(peek(vm, 1))) {
+        double b = AS_NUMBER(pop(vm));
+        double a = AS_NUMBER(pop(vm));
+        push(vm, NUMBER_VAL(a + b));
+      } else {
+        runtime_error(vm, "Operands must be two numbers or two strings.");
+        return INTERPRET_RUNTIME_ERROR;
+      }
       break;
+    }
     case OP_SUBTRACT:
       BINARY_OP(vm, NUMBER_VAL, -);
       break;
@@ -182,7 +212,7 @@ InterpretResult interpret(VM *vm, BytecodeSequence *bytecode_sequence,
     return INTERPRET_COMPILE_ERROR;
   }
 
-  compile(bytecode_sequence, source);
+  compile(vm, bytecode_sequence, source);
 
   vm->bytecode = bytecode_sequence;
   vm->ip = bytecode_sequence->code.data;

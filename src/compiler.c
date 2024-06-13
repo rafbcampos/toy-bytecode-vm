@@ -1,6 +1,8 @@
 #include "compiler.h"
 #include "bytecode_sequence.h"
+#include "object.h"
 #include "scanner.h"
+#include "vm.h"
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -10,6 +12,8 @@
 #endif
 
 extern ParseRule rules[];
+
+VM *global_vm;
 
 Parser parser;
 BytecodeSequence *compiling_sequence;
@@ -117,6 +121,11 @@ static void parse_precedence(Precedence precedence) {
   }
 }
 
+static void string() {
+  emit_constant(OBJ_VAL(copy_string(global_vm, parser.previous.start + 1,
+                                    parser.previous.length - 2)));
+}
+
 static void expression() { parse_precedence(PREC_ASSIGNMENT); }
 
 static void unary() {
@@ -220,7 +229,7 @@ ParseRule rules[] = {
     [TOKEN_LESS] = {NULL, binary, PREC_COMPARISON},
     [TOKEN_LESS_EQUAL] = {NULL, binary, PREC_COMPARISON},
     [TOKEN_IDENTIFIER] = {NULL, NULL, PREC_NONE},
-    [TOKEN_STRING] = {NULL, NULL, PREC_NONE},
+    [TOKEN_STRING] = {string, NULL, PREC_NONE},
     [TOKEN_NUMBER] = {number, NULL, PREC_NONE},
     [TOKEN_AND] = {NULL, NULL, PREC_NONE},
     [TOKEN_ELSE] = {NULL, NULL, PREC_NONE},
@@ -239,7 +248,9 @@ ParseRule rules[] = {
     [TOKEN_EOF] = {NULL, NULL, PREC_NONE},
 };
 
-bool compile(BytecodeSequence *bytecode_sequence, const char *source) {
+bool compile(VM *vm, BytecodeSequence *bytecode_sequence, const char *source) {
+  global_vm = vm;
+
   init_scanner(source);
   compiling_sequence = bytecode_sequence;
   parser.had_error = false;
