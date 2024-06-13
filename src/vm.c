@@ -10,8 +10,8 @@ void reset_stack(VM *vm) { vm->stack_top = vm->stack; }
 
 void init_vm(VM *vm) {
   if (vm == NULL) {
-    printf("vm is NULL\n");
-    return;
+    fprintf(stderr, "Trying to init the VM, but got NULL\n");
+    exit(EXIT_FAILURE);
   }
   vm->ip = NULL;
   vm->bytecode = NULL;
@@ -20,8 +20,8 @@ void init_vm(VM *vm) {
 
 void free_vm(VM *vm) {
   if (vm == NULL) {
-    printf("vm is NULL\n");
-    return;
+    fprintf(stderr, "Trying to free the VM, but got NULL\n");
+    exit(EXIT_FAILURE);
   }
   init_vm(vm);
 }
@@ -44,10 +44,9 @@ static void runtime_error(VM *vm, const char *format, ...) {
   vfprintf(stderr, format, args);
   va_end(args);
   fputs("\n", stderr);
-
   size_t instruction = vm->ip - vm->bytecode->code.data - 1;
-  LineNumber line = vm->bytecode->lines.data[instruction];
-  fprintf(stderr, "[line %d] in script\n", line.line);
+  int line = vm->bytecode->lines.data[instruction];
+  fprintf(stderr, "[line %d] in script\n", line);
   reset_stack(vm);
 }
 

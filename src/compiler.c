@@ -10,6 +10,7 @@
 #endif
 
 extern ParseRule rules[];
+
 Parser parser;
 BytecodeSequence *compiling_sequence;
 

@@ -19,9 +19,10 @@ int constant_instruction(const char *name, BytecodeSequence *sequence,
 int disassemble_instruction(BytecodeSequence *bytecode_sequence, int offset) {
   printf("%04d ", offset);
 
-  int line = get_line(bytecode_sequence, offset);
+  int line = bytecode_sequence->lines.data[offset];
+  int prev_line = bytecode_sequence->lines.data[offset - 1];
 
-  if (offset > 0 && line == get_line(bytecode_sequence, offset - 1)) {
+  if (offset > 0 && line == prev_line) {
     printf("   | ");
   } else {
     printf("%4d ", line);

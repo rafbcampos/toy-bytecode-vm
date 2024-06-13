@@ -1,32 +1,52 @@
+#ifndef dynamic_array_h
+#define dynamic_array_h
+
+#include "value.h"
+#include <stdint.h>
 #include <stdlib.h>
 
-#define DYNAMIC_ARRAY(TYPE)                                                    \
-  struct {                                                                     \
-    TYPE *data;                                                                \
-    size_t size;                                                               \
-    size_t capacity;                                                           \
-  }
+typedef struct {
+  int *data;
+  size_t size;
+  size_t capacity;
+} IntArray;
 
-#define DYNAMIC_ARRAY_INIT                                                     \
-  { NULL, 0, 0 }
+typedef struct {
+  double *data;
+  size_t size;
+  size_t capacity;
+} DoubleArray;
 
-#define DYNAMIC_ARRAY_PUSH(ARRAY, ITEM)                                        \
-  do {                                                                         \
-    if ((ARRAY).size == (ARRAY).capacity) {                                    \
-      (ARRAY).capacity = (ARRAY).capacity * 2 + 8;                             \
-      (ARRAY).data =                                                           \
-          reallocate((ARRAY).data, (ARRAY).size * sizeof(*(ARRAY).data),       \
-                     (ARRAY).capacity * sizeof(*(ARRAY).data));                \
-    }                                                                          \
-    (ARRAY).data[(ARRAY).size++] = (ITEM);                                     \
-  } while (0)
+typedef struct {
+  uint8_t *data;
+  size_t size;
+  size_t capacity;
+} Uint8Array;
 
-#define DYNAMIC_ARRAY_FREE(ARRAY)                                              \
-  do {                                                                         \
-    free((ARRAY).data);                                                        \
-    (ARRAY).data = NULL;                                                       \
-    (ARRAY).size = 0;                                                          \
-    (ARRAY).capacity = 0;                                                      \
-  } while (0)
+typedef struct {
+  Value *data;
+  size_t size;
+  size_t capacity;
+} ValueArray;
 
-void *reallocate(void *pointer, size_t oldSize, size_t newSize);
+// operations
+
+// init
+void IntArray_init(IntArray *array);
+void DoubleArray_init(DoubleArray *array);
+void Uint8Array_init(Uint8Array *array);
+void ValueArray_init(ValueArray *array);
+
+// push
+void IntArray_push(IntArray *array, int item);
+void DoubleArray_push(DoubleArray *array, double item);
+void Uint8Array_push(Uint8Array *array, uint8_t item);
+void ValueArray_push(ValueArray *array, Value item);
+
+// free
+void IntArray_free(IntArray *array);
+void DoubleArray_free(DoubleArray *array);
+void Uint8Array_free(Uint8Array *array);
+void ValueArray_free(ValueArray *array);
+
+#endif // !dynamic_array_h

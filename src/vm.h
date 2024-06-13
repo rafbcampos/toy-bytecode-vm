@@ -27,4 +27,4 @@ Value pop(VM *vm);
 InterpretResult interpret(VM *vm, BytecodeSequence *bytecode_sequence,
                           const char *source);
 
-#endif
+#endif // !vm_h

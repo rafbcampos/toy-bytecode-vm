@@ -147,7 +147,7 @@ static TokenType identifier_type() {
   return TOKEN_IDENTIFIER;
 }
 
-static Token identfier() {
+static Token identifier() {
   while (is_alpha(peek()) || is_digit(peek()))
     advance();
   return make_token(identifier_type());
@@ -163,7 +163,7 @@ Token scan_token() {
   char c = advance();
 
   if (is_alpha(c)) {
-    return identfier();
+    return identifier();
   }
 
   if (is_digit(c)) {

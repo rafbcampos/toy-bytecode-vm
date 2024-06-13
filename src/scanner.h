@@ -63,4 +63,4 @@ void init_scanner(const char *source);
 
 Token scan_token();
 
-#endif
+#endif // !scanner_h

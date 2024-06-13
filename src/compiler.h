@@ -38,4 +38,4 @@ typedef struct {
 
 bool compile(BytecodeSequence *bytecode_sequence, const char *source);
 
-#endif
+#endif // !compiler_h
