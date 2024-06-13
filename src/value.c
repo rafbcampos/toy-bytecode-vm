@@ -3,6 +3,23 @@
 #include <stdio.h>
 #include <string.h>
 
+void free_object(Obj *object) {
+  switch (object->type) {
+  case OBJ_STRING: {
+    ObjString *string = (ObjString *)object;
+    free(string->chars);
+    free(string);
+    break;
+  }
+  }
+}
+
+void free_value(Value value) {
+  if (IS_OBJ(value)) {
+    free_object(AS_OBJ(value));
+  }
+}
+
 void print_object(Value value) {
   switch (OBJ_TYPE(value)) {
   case OBJ_STRING:

@@ -38,5 +38,6 @@ typedef struct {
 
 void print_value(Value value);
 bool values_equal(Value a, Value b);
+void free_value(Value value);
 
 #endif // !value_h
